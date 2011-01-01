@@ -318,7 +318,7 @@ def delete(name):
 
 
 # Random data command
-@click.group(help="Random data")
+@click.group(help="Generate random data")
 def random():
     pass
 
@@ -330,29 +330,12 @@ def password(length):
     return Random().password(int(length))
 
 
-# Random data command
-@click.group(help="Random data")
-def ai():
-    pass
-
-
-# Init random sub command
-@ai.command(help="Prompt AI provider")
-def prompt():
-    input_text = click.edit()
-    if input_text is not None:
-        return Prompt().init().prompt(input_text)
-    else:
-        click.echo("No input received.")
-
-
 # Register Commands
 main.add_command(host)
 main.add_command(recipe)
 main.add_command(config)
 main.add_command(secret)
 main.add_command(random)
-main.add_command(ai)
 
 
 if __name__ == "__main__":

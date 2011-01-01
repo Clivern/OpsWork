@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 0.8.0
+=============
+
+- Remove AI command.
+
 Version 0.7.3
 =============
 
