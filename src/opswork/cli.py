@@ -32,7 +32,6 @@ from opswork.command.configs import Configs
 from opswork.command.recipes import Recipes
 from opswork.command.secret import Secrets
 from opswork.command.random import Random
-from opswork.command.prompt import Prompt
 
 
 @click.group(help="🐺 OpsWork Swiss Knife")

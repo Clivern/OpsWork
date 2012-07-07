@@ -2,10 +2,17 @@
 Changelog
 =========
 
+Version 0.8.1
+=============
+
+- Fix error from undefined class.
+
+
 Version 0.8.0
 =============
 
 - Remove AI command.
+
 
 Version 0.7.3
 =============
