@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 0.6.0
+=============
+
+- Support remote recipes.
+
+
 Version 0.5.1
 =============
 

@@ -67,12 +67,11 @@ class Recipes:
         # If path start with http or git
         clone_path = None
         if configs["path"].startswith("http") or configs["path"].startswith("git"):
-            clone_path = "{}/{}".format(
-                self.configs["cache"]["path"].rstrip("/"), str(uuid.uuid4())
-            )
+            uid = str(uuid.uuid4())
+            clone_path = "{}/{}".format(self.configs["cache"]["path"].rstrip("/"), uid)
             recipe_path = "{}/{}/{}".format(
                 self.configs["cache"]["path"].rstrip("/"),
-                str(uuid.uuid4()),
+                uid,
                 configs["sub"].strip("/"),
             )
             git.Repo.clone_from(configs["path"], clone_path)
