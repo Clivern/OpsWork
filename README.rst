@@ -60,6 +60,8 @@ To use opswork, follow the following steps:
     $ opswork recipe add clivern/nginx -p recipe/nginx -f
     $ opswork recipe add clivern/motd -p recipe/motd -f
     $ opswork recipe add clivern/cmd -p recipe/cmd -f
+    # From remote git
+    $ opswork recipe add clivern/dotfiles/update -p git@github.com:clivern/dotfiles.git -s brew/update -t dotfiles -f
 
 
 7. To list recipes
