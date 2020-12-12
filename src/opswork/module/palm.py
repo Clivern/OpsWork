@@ -24,13 +24,11 @@ import requests
 
 
 class Palm:
-
     def __init__(self, api_key):
         self.api_key = api_key
         self.url = "https://generativelanguage.googleapis.com/v1beta3/models/text-bison-001:generateText"
 
     def prompt(self, message):
-
         headers = {
             "Content-Type": "application/json",
         }

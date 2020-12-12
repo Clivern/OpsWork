@@ -57,10 +57,7 @@ class Configs:
                 "path": "{}/opswork.db".format(self.home),
                 "token": self.encrypt.get_key(),
             },
-            "ai": {
-                "driver": "palm",
-                "api_key": ""
-            },
+            "ai": {"driver": "palm", "api_key": ""},
             "cache": {"path": "/tmp"},
         }
 

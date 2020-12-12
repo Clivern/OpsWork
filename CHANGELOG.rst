@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 0.7.1
+=============
+
+- Fix a bug in recipe clone
+
+
 Version 0.7.0
 =============
 

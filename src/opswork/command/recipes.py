@@ -66,14 +66,19 @@ class Recipes:
 
         # If path start with http or git
         clone_path = None
-        if configs["path"].startswith("http") or configs["path"].startswith("git"):
+
+        if (
+            configs["path"].startswith("http") or configs["path"].startswith("git")
+        ) and configs["path"].endswith(".git"):
             uid = str(uuid.uuid4())
             clone_path = "{}/{}".format(self.configs["cache"]["path"].rstrip("/"), uid)
+
             recipe_path = "{}/{}/{}".format(
                 self.configs["cache"]["path"].rstrip("/"),
                 uid,
                 configs["sub"].strip("/"),
             )
+
             git.Repo.clone_from(configs["path"], clone_path)
             # Override the path
             configs["path"] = recipe_path.rstrip("/")
