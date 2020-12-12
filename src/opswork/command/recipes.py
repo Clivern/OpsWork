@@ -23,6 +23,7 @@
 import uuid
 import yaml
 import click
+import git
 
 from opswork.model.recipe import Recipe
 from opswork.module.logger import Logger
@@ -63,6 +64,21 @@ class Recipes:
         if self.database.get_recipe(name) is not None:
             raise click.ClickException(f"Recipe with name {name} exists")
 
+        # If path start with http or git
+        clone_path = None
+        if configs["path"].startswith("http") or configs["path"].startswith("git"):
+            clone_path = "{}/{}".format(
+                self.configs["cache"]["path"].rstrip("/"), str(uuid.uuid4())
+            )
+            recipe_path = "{}/{}/{}".format(
+                self.configs["cache"]["path"].rstrip("/"),
+                str(uuid.uuid4()),
+                configs["sub"].strip("/"),
+            )
+            git.Repo.clone_from(configs["path"], clone_path)
+            # Override the path
+            configs["path"] = recipe_path.rstrip("/")
+
         if self.file_system.file_exists("{}/recipe.yml".format(configs["path"])):
             recipe = self.file_system.read_file("{}/recipe.yml".format(configs["path"]))
 
@@ -89,6 +105,9 @@ class Recipes:
         )
 
         self.database.insert_recipe(recipe)
+
+        if not clone_path is None:
+            self.file_system.delete_directory(clone_path)
 
         click.echo(f"Recipe with name {name} got created")
 

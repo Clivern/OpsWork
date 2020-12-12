@@ -164,17 +164,28 @@ def recipe():
     "-p",
     "--path",
     "path",
-    type=click.Path(exists=True),
+    required=True,
     default="",
     help="Path to the recipe",
 )
+@click.option(
+    "-s",
+    "--sub",
+    "sub",
+    default="",
+    help="Sub path to the recipe",
+)
 @click.option("-t", "--tags", "tags", type=click.STRING, default="", help="Recipe tags")
 @click.option("-f", "--force", "force", is_flag=True, default=False, help="Force add")
-def add(name, path, tags, force):
+def add(name, path, sub, tags, force):
     return (
         Recipes()
         .init()
-        .add(name, {"path": path, "tags": tags.split(",") if tags != "" else []}, force)
+        .add(
+            name,
+            {"path": path, "sub": sub, "tags": tags.split(",") if tags != "" else []},
+            force,
+        )
     )
 
 
