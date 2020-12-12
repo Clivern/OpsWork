@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 0.7.3
+=============
+
+- Fix issue.
+
+
 Version 0.7.2
 =============
 
