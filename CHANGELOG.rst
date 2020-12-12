@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 0.7.0
+=============
+
+- Support AI with Google PaLM.
+
+
 Version 0.6.0
 =============
 
