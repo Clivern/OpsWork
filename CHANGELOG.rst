@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 0.4.0
+=============
+
+- Support secrets.
+
 
 Version 0.3.0
 =============

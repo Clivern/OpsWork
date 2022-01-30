@@ -26,9 +26,11 @@ import logging, json, sys
 
 from opswork import __version__
 from opswork.model.host import Host
+from opswork.model.secret import Secret
 from opswork.command.hosts import Hosts
 from opswork.command.configs import Configs
 from opswork.command.recipes import Recipes
+from opswork.command.secret import Secrets
 from opswork.command.random import Random
 
 
@@ -251,6 +253,58 @@ def dump():
     return Configs().dump()
 
 
+# Secrets command
+@click.group(help="Manage secrets")
+def secret():
+    pass
+
+
+# Add secrets sub command
+@secret.command(help="Add a secret")
+@click.argument("name")
+@click.argument("value")
+@click.option("-t", "--tags", "tags", type=click.STRING, default="", help="Secret tags")
+@click.option("-f", "--force", "force", is_flag=True, default=False, help="Force add")
+def add(name, value, tags, force):
+    secret = Secret(
+        str(uuid.uuid4()),
+        name,
+        value,
+        tags.split(",") if tags != "" else [],
+        None,
+        None,
+    )
+
+    return Secrets().init().add(secret, force)
+
+
+# List secrets sub command
+@secret.command(help="List all secrets")
+@click.option("-t", "--tag", "tag", type=click.STRING, default="", help="Secret tag")
+@click.option(
+    "-o", "--output", "output", type=click.STRING, default="", help="Output format"
+)
+def list(tag, output):
+    return Secrets().init().list(tag, output)
+
+
+# Get secret sub command
+@secret.command(help="Get a secret")
+@click.argument("name")
+@click.option(
+    "-o", "--output", "output", type=click.STRING, default="", help="Output format"
+)
+def get(name, output):
+    return Secrets().init().get(name, output)
+
+
+# Delete secret sub command
+@secret.command(help="Delete a secret")
+@click.argument("name")
+def delete(name):
+    return Secrets().init().delete(name)
+
+
 # Random data command
 @click.group(help="Random data")
 def random():
@@ -268,6 +322,7 @@ def password(length):
 main.add_command(host)
 main.add_command(recipe)
 main.add_command(config)
+main.add_command(secret)
 main.add_command(random)
 
 

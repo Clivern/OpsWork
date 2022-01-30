@@ -25,6 +25,7 @@ import sqlite3
 
 from opswork.model.host import Host
 from opswork.model.recipe import Recipe
+from opswork.model.secret import Secret
 
 
 class Database:
@@ -50,18 +51,11 @@ class Database:
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS task (id TEXT, name TEXT, payload TEXT, result TEXT, createdAt TEXT, updatedAt TEXT)"
         )
+        cursor.execute(
+            "CREATE TABLE IF NOT EXISTS secret (id TEXT, name TEXT, value TEXT, createdAt TEXT, updatedAt TEXT)"
+        )
 
         cursor.close()
-        self._connection.commit()
-
-    def delete_host(self, name):
-        """Delete a row by host name"""
-        cursor = self._connection.cursor()
-
-        cursor.execute("DELETE FROM host WHERE name = ?", (name,))
-
-        cursor.close()
-
         self._connection.commit()
 
     def get_host(self, name):
@@ -157,11 +151,11 @@ class Database:
 
         return result
 
-    def delete_recipe(self, name):
-        """Delete a row by recipe name"""
+    def delete_host(self, name):
+        """Delete a row by host name"""
         cursor = self._connection.cursor()
 
-        cursor.execute("DELETE FROM recipe WHERE name = ?", (name,))
+        cursor.execute("DELETE FROM host WHERE name = ?", (name,))
 
         cursor.close()
 
@@ -243,3 +237,103 @@ class Database:
             result.append(recipe)
 
         return result
+
+    def delete_recipe(self, name):
+        """Delete a row by recipe name"""
+        cursor = self._connection.cursor()
+
+        cursor.execute("DELETE FROM recipe WHERE name = ?", (name,))
+
+        cursor.close()
+
+        self._connection.commit()
+
+    def get_secret(self, name):
+        """Get a row by secret name"""
+        cursor = self._connection.cursor()
+
+        rows = cursor.execute(
+            "SELECT id, name, value, createdAt, updatedAt FROM secret WHERE name = '{}'".format(
+                name
+            )
+        ).fetchall()
+
+        cursor.close()
+
+        if len(rows) > 0:
+            for row in rows:
+                data = json.loads(row[2])
+
+                secret = Secret(
+                    row[0],
+                    row[1],
+                    data["value"],
+                    data["tags"],
+                    row[3],
+                    row[4],
+                )
+
+                return secret
+        else:
+            return None
+
+    def list_secrets(self):
+        """List all rows"""
+        result = []
+
+        cursor = self._connection.cursor()
+
+        rows = cursor.execute(
+            "SELECT id, name, value, createdAt, updatedAt FROM secret"
+        ).fetchall()
+
+        cursor.close()
+
+        for row in rows:
+            data = json.loads(row[2])
+
+            secret = Vault(
+                row[0],
+                row[1],
+                data["value"],
+                data["tags"],
+                row[3],
+                row[4],
+            )
+
+            result.append(secret)
+
+        return result
+
+    def insert_secret(self, secret):
+        """Insert a new row"""
+        cursor = self._connection.cursor()
+
+        result = cursor.execute(
+            "INSERT INTO secret VALUES ('{}', '{}', '{}', datetime('now'), datetime('now'))".format(
+                secret.id,
+                secret.name,
+                json.dumps(
+                    {
+                        "value": secret.value,
+                        "tags": secret.tags,
+                    }
+                ),
+            )
+        )
+
+        cursor.close()
+
+        self._connection.commit()
+
+        return result.rowcount
+
+    def delete_secret(self, name):
+        """Delete a row by secret name"""
+        cursor = self._connection.cursor()
+
+        cursor.execute("DELETE FROM secret WHERE name = ?", (name,))
+
+        cursor.close()
+
+        self._connection.commit()
