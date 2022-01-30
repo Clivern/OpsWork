@@ -28,6 +28,7 @@ from opswork.module.logger import Logger
 from opswork.module.output import Output
 from opswork.module.database import Database
 from opswork.module.file_system import FileSystem
+from opswork.module.encrypt import Encrypt
 
 
 class Configs:
@@ -38,55 +39,60 @@ class Configs:
     def __init__(self):
         self.database = Database()
         self.file_system = FileSystem()
-        self._home = os.getenv("HOME", "")
+        self.home = os.getenv("HOME", "")
+        self.encrypt = Encrypt()
         self.logger = Logger().get_logger(__name__)
 
     def init(self):
         """Init Configs"""
-        if self._home == "":
+        if self.home == "":
             raise click.ClickException("User home path is not defined")
 
         base = {
-            "database": {"type": "file", "path": "{}/opswork.db".format(self._home)},
+            "database": {
+                "type": "file",
+                "path": "{}/opswork.db".format(self.home),
+                "token": self.encrypt.get_key(),
+            },
             "cache": {"path": "/tmp"},
         }
 
-        self.database.connect("{}/opswork.db".format(self._home))
+        self.database.connect("{}/opswork.db".format(self.home))
         self.database.migrate()
 
         self.file_system.write_file(
-            "{}/{}".format(self._home, Configs.FILE), yaml.dump(base)
+            "{}/{}".format(self.home, Configs.FILE), yaml.dump(base)
         )
 
         click.echo(
             "Config file {} got created!".format(
-                click.format_filename("{}/{}".format(self._home, Configs.FILE))
+                click.format_filename("{}/{}".format(self.home, Configs.FILE))
             )
         )
 
     def edit(self):
         """Edit Configs"""
-        if self._home == "":
+        if self.home == "":
             raise click.ClickException("User home path is not defined")
 
-        if not self.file_system.file_exists("{}/{}".format(self._home, Configs.FILE)):
+        if not self.file_system.file_exists("{}/{}".format(self.home, Configs.FILE)):
             raise click.ClickException("Config file is missing")
 
-        click.edit(filename="{}/{}".format(self._home, Configs.FILE))
+        click.edit(filename="{}/{}".format(self.home, Configs.FILE))
 
         click.echo(
             "Config file {} got updated!".format(
-                click.format_filename("{}/{}".format(self._home, Configs.FILE))
+                click.format_filename("{}/{}".format(self.home, Configs.FILE))
             )
         )
 
     def dump(self):
         """Dump Configs"""
-        if self._home == "":
+        if self.home == "":
             raise click.ClickException("User home path is not defined")
 
-        if not self.file_system.file_exists("{}/{}".format(self._home, Configs.FILE)):
+        if not self.file_system.file_exists("{}/{}".format(self.home, Configs.FILE)):
             raise click.ClickException("Config file is missing")
 
         print("")
-        print(self.file_system.read_file("{}/{}".format(self._home, Configs.FILE)))
+        print(self.file_system.read_file("{}/{}".format(self.home, Configs.FILE)))
