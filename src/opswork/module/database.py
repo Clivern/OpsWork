@@ -50,18 +50,11 @@ class Database:
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS task (id TEXT, name TEXT, payload TEXT, result TEXT, createdAt TEXT, updatedAt TEXT)"
         )
+        cursor.execute(
+            "CREATE TABLE IF NOT EXISTS vault (id TEXT, name TEXT, value TEXT, createdAt TEXT, updatedAt TEXT)"
+        )
 
         cursor.close()
-        self._connection.commit()
-
-    def delete_host(self, name):
-        """Delete a row by host name"""
-        cursor = self._connection.cursor()
-
-        cursor.execute("DELETE FROM host WHERE name = ?", (name,))
-
-        cursor.close()
-
         self._connection.commit()
 
     def get_host(self, name):
@@ -157,11 +150,11 @@ class Database:
 
         return result
 
-    def delete_recipe(self, name):
-        """Delete a row by recipe name"""
+    def delete_host(self, name):
+        """Delete a row by host name"""
         cursor = self._connection.cursor()
 
-        cursor.execute("DELETE FROM recipe WHERE name = ?", (name,))
+        cursor.execute("DELETE FROM host WHERE name = ?", (name,))
 
         cursor.close()
 
@@ -243,3 +236,13 @@ class Database:
             result.append(recipe)
 
         return result
+
+    def delete_recipe(self, name):
+        """Delete a row by recipe name"""
+        cursor = self._connection.cursor()
+
+        cursor.execute("DELETE FROM recipe WHERE name = ?", (name,))
+
+        cursor.close()
+
+        self._connection.commit()
