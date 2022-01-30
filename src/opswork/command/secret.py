@@ -57,7 +57,7 @@ class Secrets:
             raise click.ClickException(f"Secret with name {secret.name} exists")
 
         secret.value = self.encrypt.encrypt(
-            self._configs["database"]["token"], secret.value
+            self.configs["database"]["token"], secret.value
         )
 
         self.database.insert_secret(secret)
@@ -78,7 +78,7 @@ class Secrets:
                     "ID": secret.id,
                     "Name": secret.name,
                     "Value": self.encrypt.decrypt(
-                        self._configs["database"]["token"], secret.value
+                        self.configs["database"]["token"], secret.value
                     ),
                     "Tags": ", ".join(secret.tags) if len(secret.tags) > 0 else "-",
                     "Created at": secret.created_at,
@@ -107,7 +107,7 @@ class Secrets:
                 "ID": secret.id,
                 "Name": secret.name,
                 "Value": self.encrypt.decrypt(
-                    self._configs["database"]["token"], secret.value
+                    self.configs["database"]["token"], secret.value
                 ),
                 "Tags": ", ".join(secret.tags) if len(secret.tags) > 0 else "-",
                 "Created at": secret.created_at,

@@ -28,7 +28,7 @@ class Encrypt:
 
     def get_key(self):
         """Get Encryption Key"""
-        Fernet.generate_key().decode("utf-8")
+        return Fernet.generate_key().decode("utf-8")
 
     def encrypt(self, key, data):
         """encrypt data"""

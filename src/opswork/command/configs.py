@@ -48,6 +48,9 @@ class Configs:
         if self.home == "":
             raise click.ClickException("User home path is not defined")
 
+        if self.file_system.file_exists("{}/{}".format(self.home, Configs.FILE)):
+            raise click.ClickException("Config file exists!")
+
         base = {
             "database": {
                 "type": "file",
