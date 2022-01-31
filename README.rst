@@ -1,9 +1,9 @@
 .. image:: https://img.shields.io/pypi/v/opswork.svg
     :alt: PyPI-Server
     :target: https://pypi.org/project/opswork/
-.. image:: https://github.com/norwik/opswork/actions/workflows/ci.yml/badge.svg
+.. image:: https://github.com/clivern/opswork/actions/workflows/ci.yml/badge.svg
     :alt: Build Status
-    :target: https://github.com/norwik/opswork/actions/workflows/ci.yml
+    :target: https://github.com/clivern/opswork/actions/workflows/ci.yml
 
 |
 
