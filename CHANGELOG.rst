@@ -5,7 +5,7 @@ Changelog
 Version 0.5.0
 =============
 
-- Support secrets.
+- Encrypt credentials
 
 
 Version 0.4.0
