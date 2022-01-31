@@ -11,8 +11,6 @@
 OpsWork
 =======
 
-OpsWork Swiss Knife.
-
 To use opswork, follow the following steps:
 
 1. Create a python virtual environment or use system wide environment
