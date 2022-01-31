@@ -61,6 +61,11 @@ class Secret:
         """Secret Tags"""
         return self._tags
 
+    @value.setter
+    def value(self, value):
+        """Set Value"""
+        self._value = value
+
     @property
     def created_at(self):
         """Secret Created At"""
@@ -70,7 +75,3 @@ class Secret:
     def updated_at(self):
         """Secret Updated At"""
         return self._updated_at
-
-    @value.setter
-    def value(self, value):
-        self._value = value

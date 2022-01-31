@@ -27,6 +27,7 @@ from opswork.model.host import Host
 from opswork.module.logger import Logger
 from opswork.module.output import Output
 from opswork.module.config import Config
+from opswork.module.encrypt import Encrypt
 from opswork.module.database import Database
 from opswork.module.file_system import FileSystem
 
@@ -38,14 +39,16 @@ class Hosts:
         self.output = Output()
         self.database = Database()
         self.config = Config()
+        self.encrypt = Encrypt()
         self.file_system = FileSystem()
         self.logger = Logger().get_logger(__name__)
 
     def init(self):
         """Init database and configs"""
-        self._configs = self.config.load()
-        self.database.connect(self._configs["database"]["path"])
+        self.configs = self.config.load()
+        self.database.connect(self.configs["database"]["path"])
         self.database.migrate()
+
         return self
 
     def add(self, host, force):
@@ -55,6 +58,24 @@ class Hosts:
 
         if self.database.get_host(host.name) is not None:
             raise click.ClickException(f"Host with name {host.name} exists")
+
+        # Encrypt the user
+        if host.user != "":
+            host.user = self.encrypt.encrypt(
+                self.configs["database"]["token"], host.user
+            )
+
+        # Encrypt the password
+        if host.password != "":
+            host.password = self.encrypt.encrypt(
+                self.configs["database"]["token"], host.password
+            )
+
+        # Encrypt the private key
+        if host.ssh_private_key != "":
+            host.ssh_private_key = self.encrypt.encrypt(
+                self.configs["database"]["token"], host.ssh_private_key
+            )
 
         self.database.insert_host(host)
 
@@ -127,10 +148,28 @@ class Hosts:
                 f"SSH feature is only for hosts with private keys"
             )
 
-        tmp_path = self._configs["cache"]["path"]
+        tmp_path = self.configs["cache"]["path"]
 
         if self.file_system.file_exists(f"{tmp_path}/{host.id}.pem"):
             self.file_system.delete_file(f"{tmp_path}/{host.id}.pem")
+
+        # Decrypt the ssh key
+        if host.ssh_private_key != "":
+            host.ssh_private_key = self.encrypt.decrypt(
+                self.configs["database"]["token"], host.ssh_private_key
+            )
+
+        # Decrypt the password
+        if host.password != "":
+            host.password = self.encrypt.decrypt(
+                self.configs["database"]["token"], host.password
+            )
+
+        # Decrypt the username
+        if host.user != "":
+            host.user = self.encrypt.decrypt(
+                self.configs["database"]["token"], host.user
+            )
 
         self.file_system.write_file(
             f"{tmp_path}/{host.id}.pem",

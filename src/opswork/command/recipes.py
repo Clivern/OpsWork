@@ -28,6 +28,7 @@ from opswork.model.recipe import Recipe
 from opswork.module.logger import Logger
 from opswork.module.output import Output
 from opswork.module.config import Config
+from opswork.module.encrypt import Encrypt
 from opswork.module.database import Database
 from opswork.module.playbook import Playbook
 from opswork.module.file_system import FileSystem
@@ -38,15 +39,16 @@ class Recipes:
 
     def __init__(self):
         self.output = Output()
-        self.database = Database()
         self.config = Config()
+        self.encrypt = Encrypt()
+        self.database = Database()
         self.file_system = FileSystem()
         self.logger = Logger().get_logger(__name__)
 
     def init(self):
         """Init database and configs"""
-        self._configs = self.config.load()
-        self.database.connect(self._configs["database"]["path"])
+        self.configs = self.config.load()
+        self.database.connect(self.configs["database"]["path"])
         self.database.migrate()
         return self
 
@@ -163,6 +165,25 @@ class Recipes:
                 raise click.ClickException(f"Host with name {name} not found")
 
             found = host.id
+
+            # Decrypt the ssh key
+            if host.ssh_private_key != "":
+                host.ssh_private_key = self.encrypt.decrypt(
+                    self.configs["database"]["token"], host.ssh_private_key
+                )
+
+            # Decrypt the password
+            if host.password != "":
+                host.password = self.encrypt.decrypt(
+                    self.configs["database"]["token"], host.password
+                )
+
+            # Decrypt the username
+            if host.user != "":
+                host.user = self.encrypt.decrypt(
+                    self.configs["database"]["token"], host.user
+                )
+
             hosts.append(host)
 
         if tag != "":
@@ -170,6 +191,25 @@ class Recipes:
             for item in items:
                 if tag not in item.tags or found == item.id:
                     continue
+
+                # Decrypt the ssh key
+                if item.ssh_private_key != "":
+                    item.ssh_private_key = self.encrypt.decrypt(
+                        self.configs["database"]["token"], item.ssh_private_key
+                    )
+
+                # Decrypt the password
+                if item.password != "":
+                    item.password = self.encrypt.decrypt(
+                        self.configs["database"]["token"], item.password
+                    )
+
+                # Decrypt the username
+                if item.user != "":
+                    item.user = self.encrypt.decrypt(
+                        self.configs["database"]["token"], item.user
+                    )
+
                 hosts.append(item)
 
         if len(hosts) == 0:
@@ -185,7 +225,7 @@ class Recipes:
 
         playbook = Playbook(
             str(uuid.uuid4()),
-            self._configs["cache"]["path"].rstrip("/"),
+            self.configs["cache"]["path"].rstrip("/"),
             hosts,
             recipe,
             var_override,

@@ -96,6 +96,21 @@ class Host:
         """Host Tags"""
         return self._tags
 
+    @user.setter
+    def user(self, user):
+        """Set User"""
+        self._user = user
+
+    @password.setter
+    def password(self, password):
+        """Set Password"""
+        self._password = password
+
+    @ssh_private_key.setter
+    def ssh_private_key(self, ssh_private_key):
+        """Set SSH Private Key"""
+        self._ssh_private_key = ssh_private_key
+
     @property
     def created_at(self):
         """Host Created At"""
