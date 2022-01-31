@@ -29,6 +29,7 @@ from opswork.model.host import Host
 from opswork.command.hosts import Hosts
 from opswork.command.configs import Configs
 from opswork.command.recipes import Recipes
+from opswork.command.random import Random
 
 
 @click.group(help="🐺 OpsWork Swiss Knife")
@@ -249,10 +250,24 @@ def dump():
     return Configs().dump()
 
 
+# Random data command
+@click.group(help="Random data")
+def random():
+    pass
+
+
+# Init random sub command
+@random.command(help="Generate a password")
+@click.argument("length")
+def password(length):
+    return Random().password(int(length))
+
+
 # Register Commands
 main.add_command(host)
 main.add_command(recipe)
 main.add_command(config)
+main.add_command(random)
 
 
 if __name__ == "__main__":
