@@ -138,3 +138,46 @@ To use opswork, follow the following steps:
     # Some examples
     $ opswork recipe run clivern/nginx -h example.com
     $ opswork recipe run clivern/ping -h localhost
+
+
+16. To generate a random password
+
+.. code-block::
+
+    $ opswork random password 8
+
+
+17. To add a secret
+
+.. code-block::
+
+    $ opswork secret add <secret/name> <secret_value> -t <tag>
+
+    $ opswork secret add clivern/cloud_provider/api_key xxxx-xxxx-xxxx-xxxx -t cloud_provider
+
+
+18. To list secrets
+
+.. code-block::
+
+    $ opswork secret list -o json
+
+
+19. To get a secret
+
+.. code-block::
+
+    $ opswork secret get <secret_name>
+
+    # For example
+    $ opswork secret get clivern/cloud_provider/api_key
+
+
+20. To delete a secret
+
+.. code-block::
+
+    $ opswork secret delete <secret_name>
+
+    # For example
+    $ opswork secret delete clivern/cloud_provider/api_key

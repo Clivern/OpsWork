@@ -292,7 +292,7 @@ class Database:
         for row in rows:
             data = json.loads(row[2])
 
-            secret = Vault(
+            secret = Secret(
                 row[0],
                 row[1],
                 data["value"],
