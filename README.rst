@@ -59,6 +59,7 @@ To use opswork, follow the following steps:
     $ opswork recipe add clivern/ping -p recipe/ping -f
     $ opswork recipe add clivern/nginx -p recipe/nginx -f
     $ opswork recipe add clivern/motd -p recipe/motd -f
+    $ opswork recipe add clivern/cmd -p recipe/cmd -f
 
 
 7. To list recipes
