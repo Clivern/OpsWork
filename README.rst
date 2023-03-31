@@ -133,7 +133,7 @@ To use opswork, follow the following steps:
 
 .. code-block::
 
-    $ opswork recipe run <recipe_name> -h <host_name>
+    $ opswork recipe run <recipe_name> -h <host_name> -v key=value
 
     # Some examples
     $ opswork recipe run clivern/nginx -h example.com
