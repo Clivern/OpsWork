@@ -222,8 +222,9 @@ def delete(name):
     default="",
     help="Hosts tag to run recipe towards",
 )
-def run(name, host, tag):
-    return Recipes().init().run(name, host, tag)
+@click.option("--var", "-v", multiple=True)
+def run(name, host, tag, var):
+    return Recipes().init().run(name, host, tag, var)
 
 
 # Manage configs command

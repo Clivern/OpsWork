@@ -29,12 +29,13 @@ from opswork.module.file_system import FileSystem
 class Playbook:
     """Playbook Class"""
 
-    def __init__(self, id, cache, hosts, recipe):
+    def __init__(self, id, cache, hosts, recipe, var):
         """Class Constructor"""
         self._id = id
         self._cache = cache
         self._hosts = hosts
         self._recipe = recipe
+        self._var = var
         self._file_system = FileSystem()
 
     def build(self):
@@ -83,6 +84,10 @@ class Playbook:
                     )
 
             del data["templates"]
+
+        # Override vars
+        if "vars" in data.keys():
+            data["vars"].update(self._var)
 
         base = {
             "hosts": "remote",

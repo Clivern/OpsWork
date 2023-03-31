@@ -147,7 +147,7 @@ class Recipes:
 
         click.echo(f"Recipe with name {name} got deleted")
 
-    def run(self, name, host_name, tag):
+    def run(self, name, host_name, tag, var):
         """Run a Recipe towards a host"""
         hosts = []
         found = ""
@@ -175,8 +175,20 @@ class Recipes:
         if len(hosts) == 0:
             raise click.ClickException(f"No hosts matching!")
 
+        var_override = {}
+
+        for item in var:
+            if "=" not in item:
+                continue
+            data = item.split("=")
+            var_override[data[0]] = data[1]
+
         playbook = Playbook(
-            str(uuid.uuid4()), self._configs["cache"]["path"].rstrip("/"), hosts, recipe
+            str(uuid.uuid4()),
+            self._configs["cache"]["path"].rstrip("/"),
+            hosts,
+            recipe,
+            var_override,
         )
 
         playbook.build()

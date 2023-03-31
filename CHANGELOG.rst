@@ -3,6 +3,12 @@ Changelog
 =========
 
 
+Version 0.3.0
+=============
+
+- Support vars override
+
+
 Version 0.2.0
 =============
 
