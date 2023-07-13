@@ -6,7 +6,7 @@
     :target: https://github.com/clivern/opswork/actions/workflows/ci.yml
 .. image:: https://static.pepy.tech/badge/opswork
     :alt: Downloads
-    :target: https://pepy.tech/projects/opswork)
+    :target: https://pepy.tech/projects/opswork
 
 |
 
