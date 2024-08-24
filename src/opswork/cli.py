@@ -22,7 +22,6 @@
 
 import uuid
 import click
-import logging, json, sys
 
 from opswork import __version__
 from opswork.model.host import Host
@@ -32,6 +31,7 @@ from opswork.command.configs import Configs
 from opswork.command.recipes import Recipes
 from opswork.command.secret import Secrets
 from opswork.command.random import Random
+from opswork.command.batch import Batch
 
 
 @click.group(help="🐺 OpsWork Swiss Knife")
@@ -329,12 +329,51 @@ def password(length):
     return Random().password(int(length))
 
 
+# Batch command
+@click.group(help="Batch operations")
+def batch():
+    pass
+
+
+# Batch load sub command
+@batch.command(help="Load recipes from a batch file")
+@click.argument("filepath")
+@click.option("-f", "--force", "force", is_flag=True, default=False, help="Force add")
+def load(filepath, force):
+    return Batch().init().load_from_file(filepath, force)
+
+
+# Batch run sub command
+@batch.command(help="Run recipes from a batch file")
+@click.argument("filepath")
+@click.option(
+    "-h",
+    "--host",
+    "host",
+    type=click.STRING,
+    default="",
+    help="The name of the host to run recipe towards",
+)
+@click.option(
+    "-t",
+    "--tag",
+    "tag",
+    type=click.STRING,
+    default="",
+    help="Hosts tag to run recipe towards",
+)
+@click.option("--var", "-v", multiple=True)
+def run(filepath, host, tag, var):
+    return Batch().init().run_from_file(filepath, host, tag, var)
+
+
 # Register Commands
 main.add_command(host)
 main.add_command(recipe)
 main.add_command(config)
 main.add_command(secret)
 main.add_command(random)
+main.add_command(batch)
 
 
 if __name__ == "__main__":

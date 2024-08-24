@@ -185,7 +185,7 @@ class Recipes:
             host = self.database.get_host(host_name)
 
             if host is None:
-                raise click.ClickException(f"Host with name {name} not found")
+                raise click.ClickException(f"Host with name {host_name} not found")
 
             found = host.id
 

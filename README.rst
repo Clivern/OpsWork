@@ -201,3 +201,12 @@ To use opswork, follow the following steps:
 
     # run recipe
     $ opswork recipe run clivern/secrets -h localhost
+
+
+22. To batch load recipes and run them
+
+.. code-block::
+
+    $ opswork batch load batch.yml --force
+
+    $ opswork batch run batch.yml --host localhost
