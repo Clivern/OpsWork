@@ -108,9 +108,7 @@ class Batch:
         recipes_list = data.get("run", [])
 
         if not isinstance(recipes_list, list) or len(recipes_list) == 0:
-            raise click.ClickException(
-                "Batch file must include a non-empty 'run' list"
-            )
+            raise click.ClickException("Batch file must include a non-empty 'run' list")
 
         runner = Recipes().init()
 
