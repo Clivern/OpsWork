@@ -187,3 +187,17 @@ To use opswork, follow the following steps:
 
     # For example
     $ opswork secret delete clivern/cloud_provider/api_key
+
+
+21. To run a recipe with secrets
+
+.. code-block::
+
+    # add recipe
+    $ opswork recipe add clivern/secrets -p recipe/secrets -f
+
+    # add secret
+    $ opswork secret add db_password s3cr3t --force
+
+    # run recipe
+    $ opswork recipe run clivern/secrets -h localhost

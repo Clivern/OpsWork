@@ -24,6 +24,9 @@ import yaml
 import ansible_runner
 
 from opswork.module.file_system import FileSystem
+from opswork.module.config import Config
+from opswork.module.encrypt import Encrypt
+from opswork.module.database import Database
 
 
 class Playbook:
@@ -36,6 +39,7 @@ class Playbook:
         self._hosts = hosts
         self._recipe = recipe
         self._var = var
+        self.cfg = Config().load()
         self._file_system = FileSystem()
 
     def build(self):
@@ -85,9 +89,34 @@ class Playbook:
 
             del data["templates"]
 
-        # Override vars
+        # Inject secrets listed under top-level `secrets:` into vars
+        # Format:
+        # secrets:
+        #   var_name: secret_name_in_db
+        if "secrets" in data.keys():
+            db = Database()
+            db.connect(self.cfg["database"]["path"])
+            enc = Encrypt()
+
+            if "vars" not in data:
+                data["vars"] = {}
+
+            for var_name, secret_name in data["secrets"].items():
+                secret = db.get_secret(secret_name)
+                if secret is None:
+                    continue
+                decrypted_value = enc.decrypt(
+                    self.cfg["database"]["token"], secret.value
+                )
+                data["vars"][var_name] = decrypted_value
+
+            del data["secrets"]
+
+        # Override vars (ensure vars exists even if not provided in recipe)
         if "vars" in data.keys():
             data["vars"].update(self._var)
+        elif len(self._var) > 0:
+            data["vars"] = self._var
 
         base = {
             "hosts": "remote",

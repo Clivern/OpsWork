@@ -96,21 +96,24 @@ class Database:
         """Insert a new row"""
         cursor = self._connection.cursor()
 
-        result = cursor.execute("INSERT INTO host VALUES (?, ?, ?, datetime('now'), datetime('now'))", (
-            host.id,
-            host.name,
-            json.dumps(
-                {
-                    "connection": host.connection,
-                    "ip": host.ip,
-                    "port": host.port,
-                    "user": host.user,
-                    "password": host.password,
-                    "ssh_private_key": host.ssh_private_key,
-                    "tags": host.tags,
-                }
+        result = cursor.execute(
+            "INSERT INTO host VALUES (?, ?, ?, datetime('now'), datetime('now'))",
+            (
+                host.id,
+                host.name,
+                json.dumps(
+                    {
+                        "connection": host.connection,
+                        "ip": host.ip,
+                        "port": host.port,
+                        "user": host.user,
+                        "password": host.password,
+                        "ssh_private_key": host.ssh_private_key,
+                        "tags": host.tags,
+                    }
+                ),
             ),
-        ))
+        )
 
         cursor.close()
 
@@ -191,17 +194,20 @@ class Database:
         """Insert a new row"""
         cursor = self._connection.cursor()
 
-        result = cursor.execute("INSERT INTO recipe VALUES (?, ?, ?, datetime('now'), datetime('now'))", (
-            recipe.id,
-            recipe.name,
-            json.dumps(
-                {
-                    "recipe": recipe.recipe,
-                    "templates": recipe.templates,
-                    "tags": recipe.tags,
-                }
+        result = cursor.execute(
+            "INSERT INTO recipe VALUES (?, ?, ?, datetime('now'), datetime('now'))",
+            (
+                recipe.id,
+                recipe.name,
+                json.dumps(
+                    {
+                        "recipe": recipe.recipe,
+                        "templates": recipe.templates,
+                        "tags": recipe.tags,
+                    }
+                ),
             ),
-        ))
+        )
 
         cursor.close()
 
